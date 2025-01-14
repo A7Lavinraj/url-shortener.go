@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"log"
 	"math/rand"
 	"os"
@@ -152,5 +153,11 @@ func main() {
 	app.Get("/:key", RedirectToCorrespondingURL)
 	app.Post("/", GetOrCreateShortURL)
 
-	app.Listen(":3000")
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "3000"
+	}
+
+	app.Listen(fmt.Sprintf(":%s", os.Getenv("PORT")))
 }
