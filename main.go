@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	_ "github.com/lib/pq"
 )
 
@@ -76,7 +77,7 @@ func generateRandomID() string {
 
 func GetOrCreateShortURL(ctx *fiber.Ctx) error {
 	var requestBody struct {
-		OriginalURL string `json:"original_url"`
+		OriginalURL string `json:"original-url"`
 	}
 
 	if err := ctx.BodyParser(&requestBody); err != nil {
@@ -149,6 +150,10 @@ func main() {
 	SetupSchema()
 
 	app := fiber.New()
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "https://url-shortenersvelte-production.up.railway.app",
+	}))
 
 	app.Get("/:key", RedirectToCorrespondingURL)
 	app.Post("/", GetOrCreateShortURL)
